@@ -3,42 +3,6 @@ library(ggplot2)
 library(reshape2)
 ncol = c(pal_npg("nrc")(8),"grey")
 
-############################################################## 0. Quality control ##############################################################
-peak_cor <- read.delim('0.qualityMetric/peak_cor_N.txt',header=F);colnames(peak_cor)<-c("stage","histone","cor")
-promoter_cor <- read.delim('0.qualityMetric/promoter_cor_N.txt',header=F);colnames(promoter_cor)<-c("stage","histone","cor")
-peak_cor$stage <- factor(peak_cor$stage,unique(as.character(peak_cor$stage)))
-promoter_cor$stage <- factor(promoter_cor$stage,unique(as.character(promoter_cor$stage)))
-
-my_colors <- RColorBrewer::brewer.pal(8, "Blues")[3:7]
-
-p <- ggplot(peak_cor, aes(x=stage, y=cor, fill=stage)) + 
-     geom_bar(position="dodge", stat="identity") +
-     scale_fill_manual(values=my_colors) + 
-     scale_y_continuous(limits = c(0,1)) + 
-     xlab("Stage")+ylab("Mean pearson correlation of replicates")+labs(title="Replicates correlation on peaks")+
-     facet_wrap(~histone) +
-     theme(axis.text.x = element_text(angle = 45, vjust = 1, size = 12, hjust = 1),
-           panel.grid.major = element_blank(),
-           panel.border = element_blank(),
-           panel.background = element_blank(),
-           axis.ticks = element_blank(),
-           legend.position = "none")
-ggsave("peak_cor_N.pdf",p,width=4.5,height=3.5)
-
-p <- ggplot(promoter_cor, aes(x=stage, y=cor, fill=stage)) + 
-     geom_bar(position="dodge", stat="identity") + 
-     scale_fill_manual(values=my_colors) + 
-     scale_y_continuous(limits = c(0,1))+
-     xlab("Stage")+ylab("Mean pearson correlation of replicates")+labs(title="Replicates correlation on promoters")+
-     facet_wrap(~histone) +
-     theme(axis.text.x = element_text(angle = 45, vjust = 1, size = 12, hjust = 1),
-           panel.grid.major = element_blank(),
-           panel.border = element_blank(),
-           panel.background = element_blank(),
-           axis.ticks = element_blank(),
-           legend.position = "none")
-ggsave("promoter_cor_N.pdf",p,width=4.5,height=3.5)
-
 ############################################################## 1. Segment number and features ##############################################################
 ###### read segment file
 IDEAS_segment <- read.delim('1.IDEAS/HPCOS_IDEAS_output/HPCOS.state',header=T,sep=" ",check.names=F)
